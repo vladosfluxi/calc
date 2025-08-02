@@ -1,10 +1,12 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
-#include <variant>
 #include <vector>
-#include <cmath>
+#include <format>
+#include <fmt/core.h>
+
 using namespace std;
+using namespace fmt;
 
 int main(){
 
@@ -43,66 +45,49 @@ int main(){
                 }
                 }
 
+                for(int i = 0; i < query.size();i++){
+                    if((query[i] == '/' || query[i] == '*') && query[i + 1] == '0' ) throw invalid_argument("Cannot multiply/divide by zero");
+                }
             }
 
-            break; // valid input
+            break; 
         }
         catch (const exception& e) {
             cout << "Invalid input: " << e.what() << "\nEnter your query again: ";
         }
     }
     
-    // for(int i = 0; i < query.size();i++){
-    //     if((query[i] == '+' || query[i] == '-' || query[i] == '*' || query[i] == '/' ) && (query[i+1] == '+' || query[i+1] == '-' || query[i+1] == '*' || query[i+1] == '/') ){
-    //         cout << 
-    //     }
-    // }
-
-
-    
-
-    // vector<variant<double ,string>> vec;
-    // double summary = 0;
-
-    // for(int i = 0;i < query.size()-1;i+=4){
-    //     for(int j = i;j < i+2;j++){
-    //         double sentense = stoi(string{1,query[j]});
-    //         switch(query[j+1]){
-    //             case '+':
-    //                 sentense + stoi(string(1,query[j+2]));
-    //                 break;
-    //             case '-':
-    //                 sentense - stoi(string(1,query[j+2]));
-    //                 break;
-    //             case '*':
-    //                 sentense - stoi(string(1,query[j+2]));
-    //                 break;
-    //             case '/':
-    //                 sentense - stoi(string(1,query[j+2]));
-    //                 break;
-    //         }
-    //         vec.push_back(sentense);
-    //         vec.push_back(string(1,query[(j-i)/2])); 
-    //         break;
-    //     }
         
-    // }
 
+    if(query[0] != '-') query.insert(query.begin(),'+');
 
+    vector<double> nums;
+    double summary = 0;
 
+    for (size_t i = 0; i < query.size(); ) {
+        char sign = query[i]; 
+        size_t start = i + 1;
+        size_t end = start;
 
-    // for(size_t i = 0; i < query.size();i+){
-    //     char op;
-    //     for(int j = i;)
-    // }
-    // for(auto &item : vec){
-    //     visit([](auto &&value){
-    //         cout << value << " ";
-    //     },item);
-    // }
+        
+        while (end < query.size() && (isdigit(query[end]) || query[end] == '.')) {
+            end++;
+        }
 
+        // Convert to double
+        double num = stod(query.substr(start, end - start));
+        if (sign == '-') num = -num;
+        nums.push_back(num);
 
-    //1 +2 -3 +4 -5+6
-    cout << query;
+        i = end; 
+    }
+    for(int i : nums){
+        summary += i;
+    }
+
+    cout << summary << endl;
+
+     
+    // cout << query;
 
 }
