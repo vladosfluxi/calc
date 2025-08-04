@@ -63,25 +63,38 @@ int main(){
 
     vector<double> nums;
     double summary = 0;
-
-    for (size_t i = 0; i < query.size(); ) {
-        char sign = query[i]; 
-        size_t start = i + 1;
-        size_t end = start;
-
-        
-        while (end < query.size() && (isdigit(query[end]) || query[end] == '.')) {
-            end++;
+     
+    for(size_t i = 0; i < query.size();i++){
+        char charSign = '+';
+        if(query[i]=='+'){
+            charSign='+';
+            i++;
+        }else if(query[i]=='-'){
+            charSign='-';i++;
         }
+        
+        
+        size_t start = i;
+        
+        string bigNum;
+        
 
-        // Convert to double
-        double num = stod(query.substr(start, end - start));
-        if (sign == '-') num = -num;
-        nums.push_back(num);
+        while(start < query.size() && (query[start] != '+' && query[start]!='-')){
+            bigNum.push_back(query[start]);           
+            start++;
+            
 
-        i = end; 
+        }
+        i = start-1;
+
+        if(charSign == '+'){
+            nums.push_back(stod(bigNum));
+
+        }else{
+           nums.push_back(-(stod(bigNum)));
+        }
     }
-    for(int i : nums){
+    for(double i : nums){
         summary += i;
     }
 
