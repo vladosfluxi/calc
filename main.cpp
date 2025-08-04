@@ -2,11 +2,8 @@
 #include <string>
 #include <algorithm>
 #include <vector>
-#include <format>
-#include <fmt/core.h>
 
 using namespace std;
-using namespace fmt;
 
 int main(){
 
@@ -63,7 +60,8 @@ int main(){
 
     vector<double> nums;
     double summary = 0;
-     
+    
+
     for(size_t i = 0; i < query.size();i++){
         char charSign = '+';
         if(query[i]=='+'){
@@ -72,12 +70,9 @@ int main(){
         }else if(query[i]=='-'){
             charSign='-';i++;
         }
-        
-        
+                
         size_t start = i;
-        
         string bigNum;
-        
 
         while(start < query.size() && (query[start] != '+' && query[start]!='-')){
             bigNum.push_back(query[start]);           
@@ -94,6 +89,7 @@ int main(){
            nums.push_back(-(stod(bigNum)));
         }
     }
+
     for(double i : nums){
         summary += i;
     }
@@ -101,6 +97,6 @@ int main(){
     cout << summary << endl;
 
      
-    // cout << query;
+    
 
 }
