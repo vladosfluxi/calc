@@ -24,14 +24,11 @@ int main() {
                             [](unsigned char ch) { return isspace(ch); }),
                   query.end());
 
-      if (query.empty()) {
-        throw invalid_argument("It cannot be empty");
-      }
+      if (query.empty()) throw invalid_argument("It cannot be empty");
+      
 
-      else if (!(isdigit(static_cast<unsigned char>(query[0])) ||
-                 query[0] == '-' || query[0] == '+' || query[0] == '(')) {
-        throw invalid_argument(
-            "It cannot start with different that +|-|/|*|( ");
+      else if (!(isdigit(static_cast<unsigned char>(query[0])) || query[0] == '-' || query[0] == '+' || query[0] == '(')) {
+        throw invalid_argument("It cannot start with different that +|-|/|*|( ");
       }
 
       else {
@@ -43,13 +40,9 @@ int main() {
         }
 
         for (size_t i = 0; i < query.size(); i++) {
-          if ((query[i] == '-' || query[i] == '+') &&
-              (query[i + 1] == '/' || query[i + 1] == '*' ||
-               query[i + 1] == '+' || query[i + 1] == '-'))
+          if ((query[i] == '-' || query[i] == '+') && (query[i + 1] == '/' || query[i + 1] == '*' || query[i + 1] == '+' || query[i + 1] == '-'))
             throw invalid_argument("You cannot sum/substract chars ");
-          if ((query[i] == '/' || query[i] == '*') &&
-              (query[i + 1] == '/' || query[i + 1] == '*'))
-            throw invalid_argument("You cannot multiply/divide chars");
+          if ((query[i] == '/' || query[i] == '*') && (query[i + 1] == '/' || query[i + 1] == '*')) throw invalid_argument("You cannot multiply/divide chars");
         }
 
         for (size_t i = 0; i < query.size(); i++) {
@@ -63,8 +56,7 @@ int main() {
     }
   }
   // if f
-  if (query[0] != '-')
-    query.insert(query.begin(), '+');
+  if (query[0] != '-') query.insert(query.begin(), '+');
 
   vector<double> finalNum;
   vector<variant<double, char>> nums;
@@ -85,12 +77,6 @@ int main() {
       i++;
     }
 
-    //10 + 5 * - 3 
-    //+10 +5 '*' -3
-     
-    //+10+5*+3 
-    //
-
     if (query[i] == '+') {
       charSign2 = '+';
       i++;
@@ -102,12 +88,10 @@ int main() {
     size_t start = i;
     string number;
 
-    while (start < query.size() &&
-           (query[start] != '+' && query[start] != '-' && query[start] != '/' &&
-            query[start] != '*')) {
-      number += query[start];
-      start++;
-    }
+    while (start < query.size() && (query[start] != '+' && query[start] != '-' && query[start] != '/' && query[start] != '*')) {
+        number += query[start];
+        start++;
+      }
 
     if (charSign2 == '+') {
       nums.push_back(stod(number));
