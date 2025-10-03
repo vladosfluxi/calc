@@ -83,12 +83,10 @@ void finalSum(string& query){
   for (size_t i = 0; i < finalNum.size(); i++) {
     summary += finalNum[i];
   }
-  cout << summary << endl;
+  cout << "Result: " << summary << endl;
   cout << endl;
 
-  // for (auto &i : nums) {
-  //   visit([](const auto &val) { cout << val << " "; }, i);
-  //   }
+  
 
 }
 
@@ -180,26 +178,30 @@ void bracketSolving(string subQuery,string& query,int lastOpeningBracketIndex,in
   
   if(query[lastOpeningBracketIndex-1] =='+' && strSubSummary[0] == '-')
   {
-    query.replace(query.begin()+lastOpeningBracketIndex-1,query.begin()+firstClosingBracketIndex,strSubSummary);
+    query.replace(query.begin()+lastOpeningBracketIndex-1,query.begin()+firstClosingBracketIndex+1,strSubSummary);
   }
   else if(query[lastOpeningBracketIndex-1] =='-' && strSubSummary[0] == '+')
   {
     strSubSummary[0] = '-'; 
-    query.replace(query.begin()+lastOpeningBracketIndex-1,query.begin()+firstClosingBracketIndex,strSubSummary);
+    query.replace(query.begin()+lastOpeningBracketIndex-1,query.begin()+firstClosingBracketIndex+1,strSubSummary);
   }
   else if(query[lastOpeningBracketIndex-1] =='+' && strSubSummary[0] == '+')
   {
-    query.replace(query.begin()+lastOpeningBracketIndex-1,query.begin()+firstClosingBracketIndex,strSubSummary);
+    query.replace(query.begin()+lastOpeningBracketIndex-1,query.begin()+firstClosingBracketIndex+1,strSubSummary);
   }
   else if(query[lastOpeningBracketIndex-1] =='-' && strSubSummary[0] == '-')
   {
     strSubSummary[0] = '+';
-    query.replace(query.begin()+lastOpeningBracketIndex-1,query.begin()+firstClosingBracketIndex,strSubSummary);
+    query.replace(query.begin()+lastOpeningBracketIndex-1,query.begin()+firstClosingBracketIndex+1,strSubSummary);
   }
   else if(query[lastOpeningBracketIndex-1] == '*' || query[lastOpeningBracketIndex-1] == '/')
   {
-    query.replace(query.begin()+lastOpeningBracketIndex,query.begin()+firstClosingBracketIndex,strSubSummary);
+    query.replace(query.begin()+lastOpeningBracketIndex,query.begin()+firstClosingBracketIndex+1,strSubSummary);
   }
+  cout << "Query: " << query << '\n';
+  static int m = 0;
+  cout <<  m<<" loop = " << subSummary << "\n";
+  m++;
 }
 
 //main function
@@ -277,54 +279,19 @@ int main() {
      }
   }
   cout << query << "\n";
-  // this is if in the query there are brackets;
-  // bool bracketFound = true;
-  // int br = 0;
-  // while(bracketFound){
-  //   for(char a : query){
-  //     if(a == ')' || a == '('){
-  //       string subQuery;
-  //       br++;
-  //       int lastOpeningBracketIndex = 0;
-  //       int firstClosingBracketIndex = 0;
-  //       for(int i = (int)query.size()-1; i >= 0;i--){
-  //         if(query[i] == '(') {
-  //           lastOpeningBracketIndex = i;
-  //           break;
-            
-  //         } 
-  //       }
-  //       for(int i = lastOpeningBracketIndex; i < (int)query.size();i++){
-  //         if(query[i] == ')'){
-  //           firstClosingBracketIndex = i;
-  //           break;
-  //         }
-  //       }
-  //       for(int i = lastOpeningBracketIndex+1;i  < firstClosingBracketIndex;i++){
-  //         subQuery.push_back(query[i]);
-  //       }
-  //       bracketSolving(subQuery, query, lastOpeningBracketIndex, firstClosingBracketIndex);
-  //     }
-  //   }
-  //   if(br < 1){
-  //     bracketFound = false;
-  //   }else{
-  //     br = 0;
-  //   }
-  // }
+  
   while (true) {
     int open = -1;
-    for (int i = 0; i < (int)query.size(); i++) {
+    for (int i = (int)query.size()-1; i >= 0;i--) {
         if (query[i] == '(') {
             open = i;
+            break;
         }
     }
 
     if (open == -1) {
-        break;
+        return -1;
     }
-
-   
     int close = -1;
     for (int i = open; i < (int)query.size(); i++) {
         if (query[i] == ')') {
@@ -335,17 +302,15 @@ int main() {
 
     if (close == -1) {
         cerr << "Error: unmatched '('\n";
-        break;
-    }
+        return -1;
+      }
 
     string subQuery = query.substr(open + 1, close - open - 1);
 
     bracketSolving(subQuery, query, open, close);
 }
 
-  for(int i = (int)query.size()-1; i  >= 0;i--){
-      
-  }
+  
 
   finalSum(query);
 }
