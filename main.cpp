@@ -18,7 +18,7 @@ void finalSum(string& query){
     if (query[i] == '*') {
       nums.push_back(static_cast<char>('*'));
       if (isdigit(static_cast<unsigned char>(query[i + 1])))
-        query.insert(query.begin() + (i+1), '+');
+        query.insert(query.begin() + (i), '+');;
       i++;
     } else if (query[i] == '/') {
       nums.push_back(static_cast<char>('/'));
@@ -86,9 +86,9 @@ void finalSum(string& query){
   cout << summary << endl;
   cout << endl;
 
-  for (auto &i : nums) {
-    visit([](const auto &val) { cout << val << " "; }, i);
-    }
+  // for (auto &i : nums) {
+  //   visit([](const auto &val) { cout << val << " "; }, i);
+  //   }
 
 }
 
@@ -97,16 +97,16 @@ void bracketSolving(string subQuery,string& query,int lastOpeningBracketIndex,in
   vector<variant<double,char>> subNums;
   double subSummary = 0;
   char subCharSign = '+';
-  for (size_t i = 0; i < query.size(); i++) {
+  for (size_t i = 0; i < subQuery.size(); i++) {
 
     if (subQuery[i] == '*') {
-      subNums.push_back(static_cast<char>('*'));
-      if ( i + 1 < subQuery.size() &&  isdigit(static_cast<unsigned char>(subQuery[i + 1])))
+      subNums.push_back((char)('*'));
+      if ( i + 1 < subQuery.size() &&  isdigit((unsigned char)(subQuery[i + 1])))
         subQuery.insert(subQuery.begin() + (i+1), '+');
       i++;
     } else if (subQuery[i] == '/') {
       subNums.push_back(static_cast<char>('/'));
-      if (i+1 < subQuery.size() && isdigit(static_cast<unsigned char>(subQuery[i + 1])))
+      if (i+1 < subQuery.size() && isdigit((char)(subQuery[i + 1])))
         subQuery.insert(subQuery.begin() + (i+1), '+');
       i++;
     }
@@ -114,7 +114,7 @@ void bracketSolving(string subQuery,string& query,int lastOpeningBracketIndex,in
     if (subQuery[i] == '+') {
       subCharSign = '+';
       i++;
-    } else if (query[i] == '-') {
+    } else if (subQuery[i] == '-') {
       subCharSign = '-';
       i++;
     }
@@ -127,15 +127,15 @@ void bracketSolving(string subQuery,string& query,int lastOpeningBracketIndex,in
         number += subQuery[start];
         start++;
       }
-
-    if (subCharSign == '+') {
-      subNums.push_back(stod(number));
-    } else if (subCharSign == '-') {
-      subNums.push_back(-(stod(number)));
+      
+    if(!number.empty()){
+      double v = stod(number);
+      subNums.push_back(subCharSign == '+'?v:-v);
     }
     i = start - 1;
   }
 
+  
   for (size_t i = 0; i < subNums.size(); i++) {
     if (holds_alternative<char>(subNums[i]) && get<char>(subNums[i]) == '*') {
       double num = get<double>(subNums[i - 1]) * get<double>(subNums[i + 1]);
@@ -182,21 +182,21 @@ void bracketSolving(string subQuery,string& query,int lastOpeningBracketIndex,in
   {
     query.replace(query.begin()+lastOpeningBracketIndex-1,query.begin()+firstClosingBracketIndex,strSubSummary);
   }
-  if(query[lastOpeningBracketIndex-1] =='-' && strSubSummary[0] == '+')
+  else if(query[lastOpeningBracketIndex-1] =='-' && strSubSummary[0] == '+')
   {
     strSubSummary[0] = '-'; 
     query.replace(query.begin()+lastOpeningBracketIndex-1,query.begin()+firstClosingBracketIndex,strSubSummary);
   }
-  if(query[lastOpeningBracketIndex-1] =='+' && strSubSummary[0] == '+')
+  else if(query[lastOpeningBracketIndex-1] =='+' && strSubSummary[0] == '+')
   {
     query.replace(query.begin()+lastOpeningBracketIndex-1,query.begin()+firstClosingBracketIndex,strSubSummary);
   }
-  if(query[lastOpeningBracketIndex-1] =='-' && strSubSummary[0] == '-')
+  else if(query[lastOpeningBracketIndex-1] =='-' && strSubSummary[0] == '-')
   {
     strSubSummary[0] = '+';
     query.replace(query.begin()+lastOpeningBracketIndex-1,query.begin()+firstClosingBracketIndex,strSubSummary);
   }
-  if(query[lastOpeningBracketIndex-1] == '*' || query[lastOpeningBracketIndex-1] == '/')
+  else if(query[lastOpeningBracketIndex-1] == '*' || query[lastOpeningBracketIndex-1] == '/')
   {
     query.replace(query.begin()+lastOpeningBracketIndex,query.begin()+firstClosingBracketIndex,strSubSummary);
   }
@@ -268,43 +268,84 @@ int main() {
       query.insert(query.begin()+i+1,'+');
       i=0;
     }
+    if((query[i] =='/' || query[i] == '*') && i < query.size() && isdigit((int)query[i+1])){
+      query.insert(query.begin()+i+1,'+');
+      i=0;
+    }
+     if(isdigit((int)query[i]) && query[i+1] == '(' && i<query.size()){
+      query.insert(query.begin()+i+1,'*');
+     }
+  }
+  cout << query << "\n";
+  // this is if in the query there are brackets;
+  // bool bracketFound = true;
+  // int br = 0;
+  // while(bracketFound){
+  //   for(char a : query){
+  //     if(a == ')' || a == '('){
+  //       string subQuery;
+  //       br++;
+  //       int lastOpeningBracketIndex = 0;
+  //       int firstClosingBracketIndex = 0;
+  //       for(int i = (int)query.size()-1; i >= 0;i--){
+  //         if(query[i] == '(') {
+  //           lastOpeningBracketIndex = i;
+  //           break;
+            
+  //         } 
+  //       }
+  //       for(int i = lastOpeningBracketIndex; i < (int)query.size();i++){
+  //         if(query[i] == ')'){
+  //           firstClosingBracketIndex = i;
+  //           break;
+  //         }
+  //       }
+  //       for(int i = lastOpeningBracketIndex+1;i  < firstClosingBracketIndex;i++){
+  //         subQuery.push_back(query[i]);
+  //       }
+  //       bracketSolving(subQuery, query, lastOpeningBracketIndex, firstClosingBracketIndex);
+  //     }
+  //   }
+  //   if(br < 1){
+  //     bracketFound = false;
+  //   }else{
+  //     br = 0;
+  //   }
+  // }
+  while (true) {
+    int open = -1;
+    for (int i = 0; i < (int)query.size(); i++) {
+        if (query[i] == '(') {
+            open = i;
+        }
+    }
+
+    if (open == -1) {
+        break;
+    }
+
+   
+    int close = -1;
+    for (int i = open; i < (int)query.size(); i++) {
+        if (query[i] == ')') {
+            close = i;
+            break;
+        }
+    }
+
+    if (close == -1) {
+        cerr << "Error: unmatched '('\n";
+        break;
+    }
+
+    string subQuery = query.substr(open + 1, close - open - 1);
+
+    bracketSolving(subQuery, query, open, close);
+}
+
+  for(int i = (int)query.size()-1; i  >= 0;i--){
+      
   }
 
-  // this is if in the query there are brackets;
-  bool bracketFound = true;
-  int br = 0;
-  while(bracketFound){
-    for(char a : query){
-      if(a == ')' || a == '('){
-        string subQuery;
-        br++;
-        int lastOpeningBracketIndex = 0;
-        int firstClosingBracketIndex = 0;
-        for(int i = (int)query.size()-1; i >= 0;i--){
-          if(query[i] == '(') {
-            lastOpeningBracketIndex = i;
-            break;
-            
-          } 
-        }
-        for(int i = lastOpeningBracketIndex; i < (int)query.size();i++){
-          if(query[i] == ')'){
-            firstClosingBracketIndex = i;
-            break;
-          }
-        }
-        for(int i = lastOpeningBracketIndex+1;i  < firstClosingBracketIndex;i++){
-          subQuery.push_back(query[i]);
-        }
-        bracketSolving(subQuery, query, lastOpeningBracketIndex, firstClosingBracketIndex);
-      }
-    }
-    if(br < 1){
-      bracketFound = false;
-    }else{
-      br = 0;
-    }
-  }
-      
   finalSum(query);
 }
