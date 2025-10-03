@@ -198,10 +198,10 @@ void bracketSolving(string subQuery,string& query,int lastOpeningBracketIndex,in
   {
     query.replace(query.begin()+lastOpeningBracketIndex,query.begin()+firstClosingBracketIndex+1,strSubSummary);
   }
-  cout << "Query: " << query << '\n';
-  static int m = 0;
-  cout <<  m<<" loop = " << subSummary << "\n";
-  m++;
+  // cout << "Query: " << query << '\n';
+  // static int m = 0;
+  // cout <<  m<<" loop = " << subSummary << "\n";
+  // m++;
 }
 
 //main function
@@ -290,7 +290,7 @@ int main() {
     }
 
     if (open == -1) {
-        return -1;
+        break;
     }
     int close = -1;
     for (int i = open; i < (int)query.size(); i++) {
@@ -302,7 +302,8 @@ int main() {
 
     if (close == -1) {
         cerr << "Error: unmatched '('\n";
-        return -1;
+        break;
+        // return -1;
       }
 
     string subQuery = query.substr(open + 1, close - open - 1);
